@@ -1,0 +1,78 @@
+#include <Wire.h>
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
+
+Adafruit_MPU6050 mpu;
+
+const int FLEX1 = 34;
+const int FLEX2 = 35;
+const int FLEX3 = 32;
+const int FLEX4 = 33;
+const int FLEX5 = 25;
+
+void setup() {
+  Serial.begin(115200);
+
+  Wire.begin(21, 22);
+
+  if (!mpu.begin()) {
+    Serial.println("MPU6050 not found!");
+    while (1) {
+      delay(10);
+    }
+  }
+
+  Serial.println("MPU6050 connected!");
+
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+
+  delay(1000);
+}
+
+void loop() {
+
+  int flex1 = analogRead(FLEX1);
+  int flex2 = analogRead(FLEX2);
+  int flex3 = analogRead(FLEX3);
+  int flex4 = analogRead(FLEX4);
+  int flex5 = analogRead(FLEX5);
+
+  sensors_event_t accel, gyro, temp;
+  mpu.getEvent(&accel, &gyro, &temp);
+
+  Serial.print("F1:");
+  Serial.print(flex1);
+
+  Serial.print(",F2:");
+  Serial.print(flex2);
+
+  Serial.print(",F3:");
+  Serial.print(flex3);
+
+  Serial.print(",F4:");
+  Serial.print(flex4);
+
+  Serial.print(",F5:");
+  Serial.print(flex5);
+
+  Serial.print(",AX:");
+  Serial.print(accel.acceleration.x);
+
+  Serial.print(",AY:");
+  Serial.print(accel.acceleration.y);
+
+  Serial.print(",AZ:");
+  Serial.print(accel.acceleration.z);
+
+  Serial.print(",GX:");
+  Serial.print(gyro.gyro.x);
+
+  Serial.print(",GY:");
+  Serial.print(gyro.gyro.y);
+
+  Serial.print(",GZ:");
+  Serial.println(gyro.gyro.z);
+
+  delay(100);
+}
